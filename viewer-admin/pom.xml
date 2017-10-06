@@ -325,6 +325,11 @@
                                 <artifactId>postgresql</artifactId>
                                 <version>${postgresql.version}</version>
                             </dependency>
+                            <dependency>
+                                <groupId>net.sourceforge.cobertura</groupId>
+                                <artifactId>cobertura</artifactId>
+                                <version>${cobertura.version}</version>
+                            </dependency>
                         </dependencies>
                     </plugin>
                 </plugins>

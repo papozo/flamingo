@@ -57,13 +57,15 @@
         <test.skip.integrationtests>false</test.skip.integrationtests>
         <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
         <tomcat.version>7.0.82</tomcat.version>
+        <cobertura.version>2.1.1</cobertura.version>
+        <jacoco-maven-plugin.version>0.8.0</jacoco-maven-plugin.version>
     </properties>
     <dependencyManagement>
         <!--
             To check for dependency updates use the following command:
             mvn -U org.codehaus.mojo:versions-maven-plugin:2.5:display-dependency-updates > dependency-updates.log
             and check the output for any available updates.
-            
+
             To check for vulnarabilities in dependencies use the following command:
             mvn org.owasp:dependency-check-maven:3.1.0:check > vuln-check.log
         -->
@@ -486,12 +488,12 @@
                 <artifactId>jsonassert</artifactId>
                 <version>1.5.0</version>
             </dependency>
-            <dependency> 
-                <groupId>net.sourceforge.cobertura</groupId> 
-                <artifactId>cobertura</artifactId> 
-                <version>2.1.1</version> 
-                <scope>test</scope> 
-            </dependency>
+            <!--            <dependency>
+                <groupId>net.sourceforge.cobertura</groupId>
+                <artifactId>cobertura</artifactId>
+                <version>${cobertura.version}</version>
+                <scope>test</scope>
+            </dependency>-->
         </dependencies>
     </dependencyManagement>
     <repositories>
@@ -710,10 +712,17 @@
                     <artifactId>properties-maven-plugin</artifactId>
                     <version>1.0.0</version>
                 </plugin>
+                <!--
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>cobertura-maven-plugin</artifactId>
                     <version>2.7</version>
+                </plugin>
+                -->
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -743,17 +752,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <configuration>
-                    <formats>
-                        <format>html</format>
-                        <format>xml</format>
-                    </formats>
-                    <check />
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
                     <execution>
@@ -774,8 +772,57 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>pre-unit-test</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/coverage-reports/jacoco-ut.exec</destFile>
+                            <propertyName>surefireArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>pre-integration-test</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
+                            <propertyName>failsafeArgLine</propertyName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <dataFileIncludes>
+                        <dataFileInclude>target/coverage-reports/jacoco-ut.exec</dataFileInclude>
+                        <dataFileInclude>target/coverage-reports/jacoco-it.exec</dataFileInclude>
+                    </dataFileIncludes>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>report-aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
     <profiles>
         <profile>
             <id>travis-ci</id>
