@@ -62,13 +62,18 @@ after_success:
 jdk:
   - oraclejdk8
   - openjdk8
-  - ibmjava8
+  #- ibmjava8
 
 os:
   - linux
 
 matrix:
   fast_finish: true
+  include:
+    - os: linux
+      sudo: required
+      group: edge
+      jdk: ibmjava8
 
 cache:
   directories:
