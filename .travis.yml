@@ -9,9 +9,9 @@ addons:
     - flamingo
   apt:
     packages:
-      - oracle-java8-installer
+      #- oracle-java8-installer
       - haveged
-      - openjdk-8-jdk
+      #- openjdk-8-jdk
       - git-lfs
 
 services:
@@ -26,10 +26,13 @@ before_install:
   - psql -U postgres -a -c "CREATE ROLE flamingo4 LOGIN PASSWORD 'flamingo4' SUPERUSER CREATEDB;"
   - psql -U postgres -a -c 'create database flamingo4;'
   - psql -U postgres -a -c 'ALTER DATABASE flamingo4 OWNER TO flamingo4;'
+  - echo $JAVA_HOME
+  
 
 install:
   # install without testing
-  - travis_wait 40 mvn --settings .travis/settings.xml -Ptravis-ci-prebuild install -U -DskipTests -Dtest.skip.integrationtests=true -B -V -fae
+  #- travis_wait 40 mvn --settings .travis/settings.xml -Ptravis-ci-prebuild install -U -DskipTests -Dtest.skip.integrationtests=true -B -V -fae
+  - mvn --settings .travis/settings.xml -Ptravis-ci-prebuild install -U -DskipTests -Dtest.skip.integrationtests=true -B -V -fae
 
 before_script:
   - unset _JAVA_OPTIONS
