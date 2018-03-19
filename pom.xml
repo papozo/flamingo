@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.flamingo-mc</groupId>
     <artifactId>flamingo-mc</artifactId>
-    <version>5.0.9-SNAPSHOT</version>
+    <version>5.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>flamingo-mc</name>
     <url>http://github.com/flamingo-mc</url>
@@ -37,7 +37,7 @@
         </license>
     </licenses>
     <properties>
-        <flamingo.version>5.0.9-SNAPSHOT</flamingo.version>
+        <flamingo.version>5.1.1-SNAPSHOT</flamingo.version>
         <java.version>1.8</java.version>
         <project.build.sourceVersion>${java.version}</project.build.sourceVersion>
         <project.build.targetVersion>${java.version}</project.build.targetVersion>
@@ -55,8 +55,8 @@
         <!-- skip integration tests by default, override this property from commandline
         or as part of a profile, see eg. 'travis-ci' profile in viewer -->
         <test.skip.integrationtests>false</test.skip.integrationtests>
-        <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
-        <tomcat.version>7.0.82</tomcat.version>
+        <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
+        <tomcat.version>7.0.85</tomcat.version>
     </properties>
     <dependencyManagement>
         <!--
@@ -92,7 +92,7 @@
             <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
-                <version>20171018</version>
+                <version>20180130</version>
             </dependency>
             <!-- Stripes -->
             <dependency>
@@ -179,6 +179,7 @@
                 <version>3.7</version>
             </dependency>
             <dependency>
+                <!-- do not upgrade because that would enforce "use strict;" -->
                 <groupId>com.google.javascript</groupId>
                 <artifactId>closure-compiler</artifactId>
                 <version>v20161201</version>
@@ -198,6 +199,10 @@
                         <!-- drags in servlet api 2.5-->
                         <groupId>javax.servlet</groupId>
                         <artifactId>servlet-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.servlet.jsp</groupId>
+                        <artifactId>jsp-api</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -240,7 +245,7 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>2.13.0</version>
+                <version>2.15.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -386,8 +391,8 @@
             <!-- web-commons -->
             <dependency>
                 <groupId>javax.servlet.jsp</groupId>
-                <artifactId>jsp-api</artifactId>
-                <version>2.2</version>
+                <artifactId>javax.servlet.jsp-api</artifactId>
+                <version>2.2.1</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -421,7 +426,7 @@
             <dependency>
                 <groupId>javax.mail</groupId>
                 <artifactId>javax.mail-api</artifactId>
-                <version>1.6.0</version>
+                <version>1.6.1</version>
                 <scope>provided</scope>
             </dependency>
 

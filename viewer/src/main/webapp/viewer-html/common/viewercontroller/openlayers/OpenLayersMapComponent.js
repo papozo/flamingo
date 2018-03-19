@@ -149,6 +149,7 @@ Ext.define("viewer.viewercontroller.OpenLayersMapComponent",{
                 }
                 var displayClass = control.displayClass.toLowerCase().replace("olcontrolnavigationhistory ", "");
                 buttondiv.innerHTML = [
+                    '<div class="svg-click-area"></div>', // An extra transparent DIV is added to fix issue where button could not be clicked in IE
                     '<svg role="img" title=""><use xlink:href="',
                     appSprite,
                     '#icon-',
@@ -622,6 +623,7 @@ Ext.define("viewer.viewercontroller.OpenLayersMapComponent",{
                 me.maps[0].getFrameworkMap().addControl(tool.getFrameworkTool());
                 me.getPanel().addControls([tool.getFrameworkTool().previous,tool.getFrameworkTool().next]);
                 me.getMap().removeListener(viewer.viewercontroller.controller.Event.ON_LAYER_ADDED,handler,handler);
+                me.repaintTools();
             };
             this.getMap().addListener(viewer.viewercontroller.controller.Event.ON_LAYER_ADDED,handler,handler);
         }else if (tool.getType() == viewer.viewercontroller.controller.Tool.CLICK){
@@ -647,6 +649,7 @@ Ext.define("viewer.viewercontroller.OpenLayersMapComponent",{
                 }
                 me.getPanel().addControls([navControl.previous]);
                 me.getMap().removeListener(viewer.viewercontroller.controller.Event.ON_LAYER_ADDED,handler,handler);
+                me.repaintTools();
             };
             this.getMap().addListener(viewer.viewercontroller.controller.Event.ON_LAYER_ADDED,handler,handler);
         }else if (tool.getType()==viewer.viewercontroller.controller.Tool.NEXT_EXTENT){//19,
@@ -662,6 +665,7 @@ Ext.define("viewer.viewercontroller.OpenLayersMapComponent",{
                 }
                 me.getPanel().addControls([navControl.next]);
                 me.getMap().removeListener(viewer.viewercontroller.controller.Event.ON_LAYER_ADDED,handler,handler);
+                me.repaintTools();
             };
             this.getMap().addListener(viewer.viewercontroller.controller.Event.ON_LAYER_ADDED,handler,handler);
         }else {
@@ -685,6 +689,19 @@ Ext.define("viewer.viewercontroller.OpenLayersMapComponent",{
             }
         }
 
+    },
+    /**
+     * IE does not render tools propertly when tools are added later, which is the case for next/prev extent
+     * Code below modifies the <use> tag inside the SVG which seems to fix the issue.
+     */
+    repaintTools: function() {
+        if(!Ext.browser.is.IE) {
+            return;
+        }
+    ﻿   var tools = document.querySelectorAll('.svg-tool svg use');
+        for(var i = 0; i < tools.length; i++) {
+            tools[i].setAttribute('href', tools[i].getAttribute('xlink:href'));
+        }
     },
     removeToolById : function (id){
         var tool = this.getTool(id);
