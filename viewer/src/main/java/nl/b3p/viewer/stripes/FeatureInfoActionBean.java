@@ -494,7 +494,7 @@ public class FeatureInfoActionBean implements ActionBean {
                 } while (false);
             } catch (Exception e) {
                 log.error("Exception loading feature info for " + exceptionMsg, e);
-                error = "Exception: " + e.toString();
+                error = "Exception: " + e.getLocalizedMessage();
             } finally {
                 if (error != null) {
                     response.put("error", error);
