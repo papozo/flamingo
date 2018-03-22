@@ -24,8 +24,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import net.sourceforge.stripes.action.*;
@@ -42,7 +40,6 @@ import org.apache.commons.logging.LogFactory;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
 import org.geotools.data.FeatureSource;
-import org.geotools.data.Query;
 import org.geotools.data.Transaction;
 import org.geotools.data.simple.SimpleFeatureStore;
 import org.geotools.factory.CommonFactoryFinder;
@@ -295,7 +292,7 @@ public class EditFeatureActionBean  implements ActionBean {
                         }
                         json.put("success", Boolean.TRUE);
                     } catch (Exception ex) {
-                        Logger.getLogger(EditFeatureActionBean.class.getName()).log(Level.SEVERE, null, ex);
+                        log.error(String.format("cannot save relatedFeature Exception: ",ex));
                     }
                 }
 
