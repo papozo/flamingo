@@ -216,20 +216,17 @@ public class EditFeatureActionBean  implements ActionBean {
         JSONObject json = new JSONObject();
         json.put("success", Boolean.FALSE);
         String error = null;
-
         FeatureSource fs = null;
         EntityManager em = Stripersist.getEntityManager();
+        
         if (appLayer == null) {
             error = "App layer or service not found";
-
         }
         if (!Authorizations.isAppLayerWriteAuthorized(application, appLayer, context.getRequest(), em)) {
             error = "U heeft geen rechten om deze kaartlaag te bewerken";
-
         }
 
         layer = appLayer.getService().getLayer(appLayer.getLayerName(), em);
-
         if (layer.getFeatureType().hasRelations()) {
             String label;
             for (FeatureTypeRelation rel : layer.getFeatureType().getRelations()) {
@@ -237,16 +234,15 @@ public class EditFeatureActionBean  implements ActionBean {
                     try {
                         SimpleFeatureType fType = rel.getForeignFeatureType();
                         label = fType.getDescription() == null ? fType.getTypeName() : fType.getDescription();
-
                         fs = fType.openGeoToolsFeatureSource(5000);
                         store = (SimpleFeatureStore) fs;
                         jsonFeature = new JSONObject(feature);
                         String fid = jsonFeature.optString(FID, null);
+                        
                         if (fid == null || fid.equals("")) {
                             json.put(FID, addNewFeature());
                         } else {
                             jsonFeature.remove("rel_id");
-                            //editFeature(fid);
                             Transaction transaction = new DefaultTransaction("edit");
                             store.setTransaction(transaction);
 
@@ -255,17 +251,14 @@ public class EditFeatureActionBean  implements ActionBean {
 
                             List<String> attributes = new ArrayList<String>();
                             List values = new ArrayList();
+                            
                             for (Iterator<String> it = jsonFeature.keys(); it.hasNext();) {
                                 String attribute = it.next();
                                 if (!FID.equals(attribute)) {
-
                                     AttributeDescriptor ad = store.getSchema().getDescriptor(attribute);
-
                                     if (ad != null) {
                                         attributes.add(attribute);
-                                        //System.out.println(attribute);
                                         String v = jsonFeature.getString(attribute);
-                                        //System.out.println(v);
                                         values.add(StringUtils.defaultIfBlank(v, null));
                                     }
                                 }
@@ -276,10 +269,8 @@ public class EditFeatureActionBean  implements ActionBean {
                                     fid,
                                     attributes.toString(),
                                     values.toString()));
-
                             try {
                                 store.modifyFeatures(attributes.toArray(new String[]{}), values.toArray(), filter);
-
                                 transaction.commit();
                             } catch (Exception e) {
                                 transaction.rollback();
@@ -295,12 +286,9 @@ public class EditFeatureActionBean  implements ActionBean {
                         log.error(String.format("cannot save relatedFeature Exception: ",ex));
                     }
                 }
-
             }
-
             fs.getDataStore().dispose();
         }
-
         return new StreamingResolution("application/json", new StringReader(json.toString(4)));
     }   
     
@@ -389,27 +377,23 @@ public class EditFeatureActionBean  implements ActionBean {
         JSONObject json = new JSONObject();
         json.put("success", Boolean.FALSE);
         String error = null;
-
         FeatureSource fs = null;
         EntityManager em = Stripersist.getEntityManager();
+        
         if (appLayer == null) {
             error = "App layer or service not found";
-
         }
         if (!Authorizations.isAppLayerWriteAuthorized(application, appLayer, context.getRequest(), em)) {
             error = "U heeft geen rechten om deze kaartlaag te bewerken";
-
         }
 
         layer = appLayer.getService().getLayer(appLayer.getLayerName(), em);
-
         if (layer.getFeatureType().hasRelations()) {
             String label;
             for (FeatureTypeRelation rel : layer.getFeatureType().getRelations()) {
                 if (rel.getType().equals(FeatureTypeRelation.RELATE)) {
                     SimpleFeatureType fType = rel.getForeignFeatureType();
                     label = fType.getDescription() == null ? fType.getTypeName() : fType.getDescription();
-
                     fs = fType.openGeoToolsFeatureSource(5000);
                     store = (SimpleFeatureStore) fs;
                     jsonFeature = new JSONObject(feature);
@@ -421,15 +405,11 @@ public class EditFeatureActionBean  implements ActionBean {
                         deleteFeature(fid);
                     }
                     json.put("success", Boolean.TRUE);
-
                 }
             }
-
             fs.getDataStore().dispose();
         }
-
         return new StreamingResolution("application/json", new StringReader(json.toString(4)));
-
     }
     
     protected String addNewFeature() throws Exception {
