@@ -218,7 +218,6 @@ public class EditFeatureActionBean  implements ActionBean {
         String error = null;
         FeatureSource fs = null;
         EntityManager em = Stripersist.getEntityManager();
-        
         if (appLayer == null) {
             error = "App layer or service not found";
         }
@@ -238,7 +237,6 @@ public class EditFeatureActionBean  implements ActionBean {
                         store = (SimpleFeatureStore) fs;
                         jsonFeature = new JSONObject(feature);
                         String fid = jsonFeature.optString(FID, null);
-                        
                         if (fid == null || fid.equals("")) {
                             json.put(FID, addNewFeature());
                         } else {
@@ -251,7 +249,6 @@ public class EditFeatureActionBean  implements ActionBean {
 
                             List<String> attributes = new ArrayList<String>();
                             List values = new ArrayList();
-                            
                             for (Iterator<String> it = jsonFeature.keys(); it.hasNext();) {
                                 String attribute = it.next();
                                 if (!FID.equals(attribute)) {
@@ -379,7 +376,6 @@ public class EditFeatureActionBean  implements ActionBean {
         String error = null;
         FeatureSource fs = null;
         EntityManager em = Stripersist.getEntityManager();
-        
         if (appLayer == null) {
             error = "App layer or service not found";
         }

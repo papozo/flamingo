@@ -368,7 +368,7 @@ public class FeatureInfoActionBean implements ActionBean {
         JSONArray responses = new JSONArray();
         FeatureSource fs = null;
         EntityManager em = Stripersist.getEntityManager();
-        
+
         for (int i = 0; i < queries.length(); i++) {
             JSONObject query = queries.getJSONObject(i);
             response = new JSONObject();
@@ -411,7 +411,7 @@ public class FeatureInfoActionBean implements ActionBean {
                     } else {
                         response.put("featureType", layer.getFeatureType().getId());
                     }
-                    
+
                     String filter = query.optString("filter", null);
                     fs = layer.getFeatureType().openGeoToolsFeatureSource(TIMEOUT);
                     Query q = new Query(fs.getName().toString());
@@ -439,7 +439,7 @@ public class FeatureInfoActionBean implements ActionBean {
                         Polygon p = shapeFact.createCircle();
                         spatialFilter = ff.intersects(ff.property(geomAttribute), ff.literal(p));
                     }
-                    
+
                     Filter currentFilter = filter != null && filter.trim().length() > 0 ? CQL.toFilter(filter) : null;
 
                     if (currentFilter != null) {
@@ -455,7 +455,7 @@ public class FeatureInfoActionBean implements ActionBean {
                     q.setFilter(f);
                     q.setMaxFeatures(limit + 1);
                     JSONArray features = executeQuery(al, layer.getFeatureType(), fs, q);
-                    
+
                     if (features.length() > limit) {
                         JSONArray newArray = new JSONArray();
                         for (int j = 0; j < features.length(); j++) {
@@ -497,7 +497,6 @@ public class FeatureInfoActionBean implements ActionBean {
                     jFeat.put("fid", fid);
                 }
             }
-            
             String label;
             FeatureToJson ftjson = new FeatureToJson(false, false, false, true, true, attributesToInclude);
             for (FeatureTypeRelation rel : layer.getFeatureType().getRelations()) {
