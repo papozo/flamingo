@@ -690,7 +690,8 @@ Ext.define("viewer.components.Edit", {
             viewerController: this.config.viewerController
         });
         var me = this;
-        featureInfo.editFeatureInfo(coords.x, coords.y, this.config.viewerController.mapComponent.getMap().getResolution() * 4, layer, function (features) {
+        featureInfo.editFeatureInfo(coords.x, coords.y, this.config.viewerController.mapComponent.getMap().getResolution() * 4, layer, function (response) {
+            var features = response.features;
             me.featuresReceived(features);
         }, function (msg) {
             me.failed(msg);
