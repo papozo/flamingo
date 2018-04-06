@@ -895,7 +895,8 @@ Ext.define("viewer.components.Edit", {
         }
         me.editingLayer = this.config.viewerController.getLayer(this.layerSelector.getValue());
         Ext.create("viewer.EditFeature", {
-            viewerController: this.config.viewerController
+            viewerController: this.config.viewerController,
+            actionbeanUrl: actionBeans["editfeature"]+"?delete"
         }).remove(
                 me.editingLayer,
                 feature,
